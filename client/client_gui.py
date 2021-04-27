@@ -28,6 +28,9 @@ class WindowClient(Frame):
         Grid.rowconfigure(self, 4, weight=1)
         Grid.columnconfigure(self, 1, weight=1)
 
+        t = Thread(target=self.recieve_messages, name="messages-queue")
+        t.start()
+
     def __del__(self):
         self.close_connection()
 
@@ -79,6 +82,9 @@ class WindowClient(Frame):
         app = WindowClient(root,usernmame,passwd)
         root.mainloop()
 
+    def recieve_messages(self,message):
+        #mogelijkheid voor Queue tussen te plaatsen
+        logging.info(f"moderator: {message}")
 
 
 #WindowClient.create_client()

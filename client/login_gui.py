@@ -4,8 +4,6 @@ from tkinter import *
 from tkinter import messagebox
 from client_gui import WindowClient
 
-username=""
-passwd=""
 
 class Window(Frame):
     def __init__(self, master=None):
@@ -13,15 +11,7 @@ class Window(Frame):
         self.master = master
         self.init_window()
         # self.makeConnnectionWithServer()
-    def login(self):
-        global username
-        global passwd
-        print("login")
-        username=self.entry_username.get()
-        passwd=self.entry_passsword.get()
-        print(f"{username},{passwd}")
-        self.master.destroy()
-        WindowClient.create_client(username,passwd)    
+      
         
     # Creation of init_window
     def init_window(self):
@@ -74,7 +64,14 @@ class Window(Frame):
         except Exception as ex:
             logging.error(f"Foutmelding: {ex}")
             messagebox.showinfo("Sommen", "Something has gone wrong...")
-    
+
+    def login(self):
+        logging.info("loggin in")
+        username=self.entry_username.get()
+        passwd=self.entry_passsword.get()
+        logging.info(f"{username},{passwd}")
+        self.master.destroy()
+        WindowClient.create_client(username,passwd)  
 
 logging.basicConfig(level=logging.INFO)
 

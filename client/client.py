@@ -24,8 +24,7 @@ def getmessage():
     print(message)
     io_stream_server.flush()    
 
-while (stop==False):
-    
+#while (stop==False):
     
     
 

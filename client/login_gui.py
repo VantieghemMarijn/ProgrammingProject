@@ -3,6 +3,7 @@ import socket
 from tkinter import *
 from tkinter import messagebox
 from client_gui import WindowClient
+import functools
 
 
 class Window(Frame):
@@ -27,7 +28,7 @@ class Window(Frame):
         self.entry_passsword = Entry(self, width=40)
         self.entry_passsword.grid(row=3, column=0, sticky=E + W, padx=(10, 10), pady =(5,0))
 
-        Button(self,command=self.login,text="test",width=10).grid(row=4,column=0,sticky=S,pady=(20,0))
+        Button(self,command=self.makeConnnectionWithServer,text="test",width=10).grid(row=4,column=0,sticky=S,pady=(20,0))
         
 
         Grid.rowconfigure(self, 5, weight=1)
@@ -50,6 +51,7 @@ class Window(Frame):
             self.socket_to_server.connect((host, port))
             self.my_writer_obj = self.socket_to_server.makefile(mode='rw')
             logging.info("Open connection with server succesfully")
+            self.login()
         except Exception as ex:
             logging.error(f"Foutmelding: {ex}")
 
@@ -71,7 +73,8 @@ class Window(Frame):
         passwd=self.entry_passsword.get()
         logging.info(f"{username},{passwd}")
         self.master.destroy()
-        WindowClient.create_client(username,passwd)  
+        print()
+        client = WindowClient.create_client(username, passwd, self.socket_to_server, self.my_writer_obj)  
 
 logging.basicConfig(level=logging.INFO)
 

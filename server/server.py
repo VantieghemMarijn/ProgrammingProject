@@ -1,10 +1,13 @@
 import logging
 import socket
+# create a socket object
+import threading
+
+from models.client_handler import ClientHandler
+
 
 logging.basicConfig(level=logging.DEBUG)
 
-# create a socket object
-logging.info("Creating serversocket...")
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # get local machine name
@@ -20,28 +23,12 @@ serversocket.listen(5)
 
 
 while True:
-    logging.info("waiting for a client...")
+    logging.info("Server: waiting for a client...")
 
     # establish a connection
     socket_to_client, addr = serversocket.accept()
 
-    logging.info(f"Got a connection from {addr})")
-
-    io_stream_client = socket_to_client.makefile(mode='rw')
-    logging.info("waiting...")
-    commando = io_stream_client.readline().rstrip('\n')
-    while commando != "CLOSE":
-        getal1 = io_stream_client.readline().rstrip('\n')
-        logging.debug(f"Number 1: {getal1}")
-        getal2 = io_stream_client.readline().rstrip('\n')
-        logging.debug(f"Number 2: {getal2}")
-
-        sum = int(getal1) + int(getal2)
-        io_stream_client.write(f"{sum}\n")
-        io_stream_client.flush()
-        logging.debug(f"Sending back sum: {sum}")
-
-        commando = io_stream_client.readline().rstrip('\n')
-
-    logging.info("Connection closed...")
-    socket_to_client.close()
+    logging.info(f"Server: Got a connection from {addr})")
+    clh = ClientHandler(socket_to_client)
+    clh.run()
+    logging.info(f"Server: ok, clienthandler started. Current Thread count: {threading.active_count()}.")
